@@ -2,12 +2,10 @@ package alura.com.br.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +17,8 @@ import java.util.List;
 import alura.com.br.R;
 import alura.com.br.dao.AlunoDAO;
 import alura.com.br.model.Aluno;
+
+import static alura.com.br.ui.activity.ConstantesActivity.CHAVE_ALUNO;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
@@ -42,12 +42,12 @@ public class ListaAlunosActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                carregaActivityFormularioAluno();
+                abreFormularioModoInsereAluno();
             }
         });
     }
 
-    private void carregaActivityFormularioAluno() {
+    private void abreFormularioModoInsereAluno() {
         startActivity(new Intent(ListaAlunosActivity.this, FormularioAlunoActivity.class));
     }
 
@@ -65,20 +65,33 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
 
     private void carregaListaDeAlunos() {
-        final List<Aluno> todos = dao.todos();
+        final List<Aluno> alunos = dao.todos();
         final ListView listaDeAlunos = findViewById(R.id.activity_lista_de_alunos_listview);
-        listaDeAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, todos));
+        configuraAdapter(alunos, listaDeAlunos);
+        configuraListenerDeCliquePorItem(listaDeAlunos);
+    }
+
+    private void configuraListenerDeCliquePorItem(ListView listaDeAlunos) {
         listaDeAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Aluno alunoEscolhido  = todos.get(position);
-                Log.i("Lista de alunos pos", ":" + position);
-                Log.i("Lista de alunos id", ":" + alunoEscolhido .getId());
+                //Aluno alunoEscolhido  = alunos.get(position); // dessa forma, poderia ser passado uma lista diferente do que esta no adapter
+                Aluno alunoEscolhido = (Aluno) parent.getItemAtPosition(position); // dessa forma garante que o a lista pega o aluno do adapter
+//                Log.i("Lista de alunos pos", ":" + position);
+//                Log.i("Lista de alunos id", ":" + alunoEscolhido .getId());
 
-                Intent vaiParaFormularioActivity  = new Intent(ListaAlunosActivity.this, FormularioAlunoActivity.class);
-                vaiParaFormularioActivity .putExtra("aluno", alunoEscolhido );
-                startActivity(vaiParaFormularioActivity );
+                abreFormularioParaEdicao(alunoEscolhido);
             }
         });
+    }
+
+    private void abreFormularioParaEdicao(Aluno aluno) {
+        Intent vaiParaFormularioActivity = new Intent(ListaAlunosActivity.this, FormularioAlunoActivity.class);
+        vaiParaFormularioActivity.putExtra(CHAVE_ALUNO, aluno);
+        startActivity(vaiParaFormularioActivity);
+    }
+
+    private void configuraAdapter(List<Aluno> alunos, ListView listaDeAlunos) {
+        listaDeAlunos.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, alunos));
     }
 }
