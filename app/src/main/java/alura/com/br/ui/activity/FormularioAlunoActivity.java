@@ -21,6 +21,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     private EditText campoNome;
     private EditText campoTelefone;
     private EditText campoEmail;
+    private Aluno aluno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        Aluno aluno = (Aluno) dados.getSerializableExtra("aluno");
+        aluno = (Aluno) dados.getSerializableExtra("aluno");
         campoNome.setText(aluno.getNome());
         campoTelefone.setText(aluno.getTelefone());
         campoEmail.setText(aluno.getEmail());
@@ -44,8 +45,12 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Aluno alunoCriado = criaAluno();
-                salvaAluno(alunoCriado);
+//                Aluno alunoCriado = preencheAluno();
+//                salvaAluno(alunoCriado);
+
+            preencheAluno();
+            dao.edita(aluno);
+            finish();
 
 //          debug
 //          Toast.makeText(FormularioAlunoActivity.this, alunoCriado.getNome() + " - " +
@@ -60,21 +65,16 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         finish();
     }
 
-    private Aluno criaAluno() {
+    private void preencheAluno() {
         String nome = campoNome.getText().toString();
         String telefone = campoTelefone.getText().toString();
         String email = campoEmail.getText().toString();
 
-        return new Aluno(nome, telefone, email);
-    }
-
-//    private Aluno edita() {
-//        String nome = campoNome.getText().toString();
-//        String telefone = campoTelefone.getText().toString();
-//        String email = campoEmail.getText().toString();
-//
 //        return new Aluno(nome, telefone, email);
-//    }
+        aluno.setNome(nome);
+        aluno.setTelefone(telefone);
+        aluno.setEmail(email);
+    }
 
     private void inicializaCampos() {
         campoNome = findViewById(R.id.activity_formulario_aluno_nome);
