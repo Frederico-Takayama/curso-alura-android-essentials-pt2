@@ -33,11 +33,14 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        aluno = (Aluno) dados.getSerializableExtra("aluno");
-        campoNome.setText(aluno.getNome());
-        campoTelefone.setText(aluno.getTelefone());
-        campoEmail.setText(aluno.getEmail());
-
+        if(dados.hasExtra("aluno")){
+            aluno = (Aluno) dados.getSerializableExtra("aluno");
+            campoNome.setText(aluno.getNome());
+            campoTelefone.setText(aluno.getTelefone());
+            campoEmail.setText(aluno.getEmail());
+        } else {
+            aluno = new Aluno();
+        }
     }
 
     private void configuraBotaoSalvar() {
@@ -49,7 +52,11 @@ public class FormularioAlunoActivity extends AppCompatActivity {
 //                salvaAluno(alunoCriado);
 
             preencheAluno();
-            dao.edita(aluno);
+            if(aluno.temIdValido()){
+                dao.edita(aluno);
+            } else {
+                dao.salva(aluno);
+            }
             finish();
 
 //          debug
@@ -57,12 +64,6 @@ public class FormularioAlunoActivity extends AppCompatActivity {
 //            alunoCriado.getTelefone() + " - " + alunoCriado.getEmail(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void salvaAluno(Aluno alunoCriado) {
-        dao.salva(alunoCriado);
-//      startActivity( new Intent(FormularioAlunoActivity.this, ListaAlunosActivity.class));
-        finish();
     }
 
     private void preencheAluno() {

@@ -9,7 +9,7 @@ import alura.com.br.model.Aluno;
 public class AlunoDAO {
 
     private final static List<Aluno> alunos = new ArrayList<>();
-    private static int contadorDeIds =0;
+    private static int contadorDeIds = 1;
 
     public void salva(Aluno alunoCriado) {
         alunoCriado.setId(contadorDeIds);
