@@ -68,6 +68,14 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         return new Aluno(nome, telefone, email);
     }
 
+//    private Aluno edita() {
+//        String nome = campoNome.getText().toString();
+//        String telefone = campoTelefone.getText().toString();
+//        String email = campoEmail.getText().toString();
+//
+//        return new Aluno(nome, telefone, email);
+//    }
+
     private void inicializaCampos() {
         campoNome = findViewById(R.id.activity_formulario_aluno_nome);
         campoTelefone = findViewById(R.id.activity_formulario_aluno_telefone);
